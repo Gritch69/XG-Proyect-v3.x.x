@@ -234,6 +234,18 @@ class UpdateLib extends XGPCore
         }
     }
 
+    private static function cleanBuildingQueue(&$current_planet){
+        $current_planet['planet_b_building']    = 0;
+        $current_planet['planet_b_building_id'] = 0;
+
+        parent::$db->query(
+            "UPDATE " . PLANETS . " SET
+            `planet_b_building` = '". $current_planet['planet_b_building'] ."',
+            `planet_b_building_id` = '". $current_planet['planet_b_building_id'] ."'
+            WHERE `planet_id` = '" . $current_planet['planet_id'] . "';"
+        );
+    }
+
     /**
      * checkBuildingQueue
      *
@@ -270,8 +282,7 @@ class UpdateLib extends XGPCore
                 $for_destroy = false;
             }
 
-            if ($build_end_time <= time()) {
-
+            if( DevelopmentsLib::isDevelopmentPayable( $current_user, $current_planet, $element, true, $for_destroy ) && $build_end_time <= time() ) {
                 $needed     = DevelopmentsLib::developmentPrice(
                     $current_user,
                     $current_planet,
@@ -348,20 +359,11 @@ class UpdateLib extends XGPCore
                 
                 $ret_value = true;
             } else {
-
+                self::cleanBuildingQueue($current_planet);
                 $ret_value = false;
             }
         } else {
-            $current_planet['planet_b_building']    = 0;
-            $current_planet['planet_b_building_id'] = 0;
-
-            parent::$db->query(
-                "UPDATE " . PLANETS . " SET
-                `planet_b_building` = '". $current_planet['planet_b_building'] ."',
-                `planet_b_building_id` = '". $current_planet['planet_b_building_id'] ."'
-                WHERE `planet_id` = '" . $current_planet['planet_id'] . "';"
-            );
-
+            self::cleanBuildingQueue($current_planet);
             $ret_value = false;
         }
 

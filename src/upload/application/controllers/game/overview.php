@@ -320,7 +320,7 @@ class Overview extends XGPCore
 
         $this->Overview_Model->clearResults($own_fleets);
 
-        if (count($fleet_row) > 0 && $fleet_row != '') {
+        if ( $fleet_row != '' && count($fleet_row) > 0 ) {
             ksort($fleet_row);
 
             foreach ($fleet_row as $time => $content) {

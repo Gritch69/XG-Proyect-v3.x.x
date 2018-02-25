@@ -16,6 +16,10 @@ namespace application\libraries;
 
 use application\core\XGPCore;
 use application\core\Options;
+use application\libraries\messenger\Messenger;
+use application\libraries\messenger\MessagesTypes;
+use application\libraries\messenger\MessagesFormat;
+use application\libraries\messenger\MessagesOptions;
 
 /**
  * FunctionsLib Class
@@ -65,22 +69,6 @@ abstract class FunctionsLib extends XGPCore
     }
 
     /**
-     * formatText
-     *
-     * @param string $text Text
-     *
-     * @return string
-     */
-    public static function formatText($text)
-    {
-        $text   = parent::$db->escapeValue($text);
-        $text   = trim(nl2br(strip_tags($text, '<br>')));
-        $text   = preg_replace('|[\r][\n]|', '\\r\\n', $text);
-
-        return $text;
-    }
-
-    /**
      * chronoApplet
      *
      * @param string  $type  Type
@@ -124,7 +112,7 @@ abstract class FunctionsLib extends XGPCore
             foreach ($configs->getOptions()  as $row) {
                 $return[$row['option_name']]   = $row['option_value'];
             }
-            
+
             return $return;
         } else {
 
@@ -427,47 +415,46 @@ abstract class FunctionsLib extends XGPCore
 
         $options->setMessageText($message);
 
-        $messenger = new Messenger();
-        $messenger->sendMessage($options);
+        Messenger::sendMessage($options);
     }
-    
+
     /**
      * Send and email
-     * 
+     *
      * @param string $to      Mail To
      * @param string $subject Mail Subject
      * @param string $body    Mail Body
      * @param array  $from    Mail From
      * @param mixed  $headers Mail headers (optional)
-     * 
+     *
      * @return mixed
      */
     public static function sendEmail($to, $subject, $body, $from, $format = 'text', $headers = '')
     {
         // require email library
         $mail_library_path  = XGP_ROOT . VENDOR_PATH . 'ci/system/libraries/Email.php';
-        
+
         if (!file_exists($mail_library_path)) {
-            
+
             return;
         }
-        
+
         // required by the library
         if (!defined('BASEPATH')) {
 
             define('BASEPATH', true);
         }
-        
+
         // use CI library
         require_once $mail_library_path;
-        
+
         $mail   = new \CI_Email();
-        
+
         if ($format === 'text' or $format === 'html') {
 
             $mail->set_mailtype($format);
         }
-        
+
         // from
         if (is_array($from)) {
 
@@ -479,23 +466,23 @@ abstract class FunctionsLib extends XGPCore
 
         // headers
         if (is_array($headers)) {
-            
+
             foreach ($headers as $header => $value) {
 
                 $mail->set_header($header, $value);
             }
         }
-        
+
         // subject
         $mail->subject($subject);
-        
+
         // message body
         $mail->message($body);
 
         // send!
         $mail->send();
     }
-    
+
     /**
      * getDefaultVacationTime
      *
@@ -627,7 +614,7 @@ abstract class FunctionsLib extends XGPCore
         if ($installed) {
             return self::readConfig('lang');
         }
-        
+
         // set the user language reading the config file
         if ($installed && !isset($_COOKIE['current_lang'])) {
 
@@ -639,15 +626,15 @@ abstract class FunctionsLib extends XGPCore
 
             return $_COOKIE['current_lang'];
         }
-        
+
         return 'english'; // the universal language if nothing was set
     }
-    
+
     /**
      * setCurrentLanguage
-     * 
+     *
      * @param string $lang Language
-     * 
+     *
      * @return void
      */
     public static function setCurrentLanguage($lang = '')
@@ -657,10 +644,10 @@ abstract class FunctionsLib extends XGPCore
 
             self::updateConfig('lang', $lang);
         }
-        
+
         setcookie('current_lang', $lang);
     }
-    
+
     /**
      * getLanguages
      *

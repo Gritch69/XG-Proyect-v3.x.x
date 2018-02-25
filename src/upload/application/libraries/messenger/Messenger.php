@@ -29,7 +29,7 @@ use application\core\XGPCore;
 final class Messenger extends XGPCore
 {
     /**
-     * 
+     *
      */
     public function __construct()
     {
@@ -41,7 +41,7 @@ final class Messenger extends XGPCore
      *
      * @param \application\libraries\MessagesOptions $options
      */
-    public function sendMessage(MessagesOptions $options)
+    public static function sendMessage(MessagesOptions $options)
     {
         // TODO: call a model instead of this
         parent::$db->query(

@@ -14,6 +14,8 @@
 
 namespace application\libraries;
 
+use application\core\XGPCore;
+
 /**
  * FormatLib Class
  *
@@ -24,8 +26,20 @@ namespace application\libraries;
  * @link     http://www.xgproyect.org
  * @version  3.0.0
  */
-class FormatLib
+class FormatLib extends XGPCore
 {
+
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    
+
     /**
      * prettyTime
      *
@@ -314,6 +328,23 @@ class FormatLib
 
         return round($bytes, $precision) . ' ' . $units[$pow]; 
     } 
+
+    /**
+     * formatText
+     *
+     * @param string $text Text
+     *
+     * @return string
+     */
+    public static function formatText($text)
+    {
+        $text   = parent::$db->escapeValue($text);
+        $text   = trim(nl2br(strip_tags($text, '<br>')));
+        $text   = preg_replace('|[\r][\n]|', '\\r\\n', $text);
+
+        return $text;
+    }
+
 }
 
 /* end of FormatLib.php */

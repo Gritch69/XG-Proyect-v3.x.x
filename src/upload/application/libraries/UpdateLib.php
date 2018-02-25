@@ -74,9 +74,9 @@ class UpdateLib extends XGPCore
             );
 
             if ($ChooseToDelete) {
-                
+
                 while ($delete = parent::$db->fetchArray($ChooseToDelete)) {
-                    
+
                     parent::$users->deleteUser($delete['user_id']);
                 }
             }
@@ -91,7 +91,7 @@ class UpdateLib extends XGPCore
                 INNER JOIN " . SHIPS . " AS s ON s.ship_planet_id = p.`planet_id`
                 WHERE `planet_destroyed` < '" . $del_planets . "' AND `planet_destroyed` <> 0;"
             );
-            
+
             FunctionsLib::updateConfig('last_cleanup', time());
         }
     }
@@ -110,7 +110,7 @@ class UpdateLib extends XGPCore
 
         // CHECK TIME
         if ((time() >= ($last_backup + (3600 * $update_interval))) &&  ($auto_backup == 1)) {
-            
+
             parent::$db->backupDb(); // MAKE BACKUP
 
             FunctionsLib::updateConfig('last_backup', time());
@@ -162,14 +162,14 @@ class UpdateLib extends XGPCore
         if (!defined('IN_GAME')) {
             define('IN_GAME', true);
         }
-        
+
         include_once XGP_ROOT . LIB_PATH . 'MissionControlLib.php';
 
         $_fleets    = parent::$db->query(
-            "SELECT 
-            fleet_start_galaxy, 
-            fleet_start_system, 
-            fleet_start_planet, 
+            "SELECT
+            fleet_start_galaxy,
+            fleet_start_system,
+            fleet_start_planet,
             fleet_start_type
             FROM " . FLEETS . "
             WHERE `fleet_start_time` <= '" . time() . "' AND `fleet_mess` ='0'
@@ -177,7 +177,7 @@ class UpdateLib extends XGPCore
         );
 
         while ($row = parent::$db->fetchArray($_fleets)) {
-            
+
             $array                  = array();
             $array['planet_galaxy'] = $row['fleet_start_galaxy'];
             $array['planet_system'] = $row['fleet_start_system'];
@@ -190,10 +190,10 @@ class UpdateLib extends XGPCore
         parent::$db->freeResult($_fleets);
 
         $_fleets    = parent::$db->query(
-            "SELECT 
-            fleet_end_galaxy, 
-            fleet_end_system, 
-            fleet_end_planet, 
+            "SELECT
+            fleet_end_galaxy,
+            fleet_end_system,
+            fleet_end_planet,
             fleet_end_type
             FROM " . FLEETS . "
             WHERE `fleet_end_time` <= '" . time() . "
@@ -247,13 +247,11 @@ class UpdateLib extends XGPCore
         $resource   = parent::$objects->getObjects();
         $ret_value  = false;
 
-        if ($current_planet['planet_b_building_id'] != 0) {
+        if ($current_planet['planet_b_building_id'] != '0') {
 
             $current_queue  = $current_planet['planet_b_building_id'];
 
-            if ($current_queue != 0) {
-                $queue_array    = explode(";", $current_queue);
-            }
+            $queue_array    = explode(";", $current_queue);
 
             $build_array    = explode(",", $queue_array[0]);
             $build_end_time = floor($build_array[3]);
@@ -272,15 +270,6 @@ class UpdateLib extends XGPCore
 
             if ($build_end_time <= time()) {
 
-                $needed     = DevelopmentsLib::developmentPrice(
-                    $current_user,
-                    $current_planet,
-                    $element,
-                    true,
-                    $for_destroy
-                );
-                
-                $units      = $needed['metal'] + $needed['crystal'] + $needed['deuterium'];
                 $current    = (int)$current_planet['planet_field_current'];
                 $max        = (int)$current_planet['planet_field_max'];
 
@@ -303,7 +292,7 @@ class UpdateLib extends XGPCore
                         }
                     }
                 } elseif ($current_planet['planet_type'] == 1) {
-                    
+
                     if ($for_destroy == false) {
 
                         $current    += 1;
@@ -323,7 +312,7 @@ class UpdateLib extends XGPCore
                     $new_queue = implode(';', $queue_array);
                 }
 
-                $current_planet['planet_b_building']    = 0;
+                $current_planet['planet_b_building']    = '0';
                 $current_planet['planet_b_building_id'] = $new_queue;
                 $current_planet['planet_field_current'] = $current;
                 $current_planet['planet_field_max']     = $max;
@@ -345,15 +334,17 @@ class UpdateLib extends XGPCore
                     `planet_field_max` = '" . $current_planet['planet_field_max'] . "'
                     WHERE `planet_id` = '" . $current_planet['planet_id'] . "';"
                 );
-                
+
                 $ret_value = true;
+
             } else {
 
                 $ret_value = false;
+
             }
         } else {
-            $current_planet['planet_b_building']    = 0;
-            $current_planet['planet_b_building_id'] = 0;
+            $current_planet['planet_b_building']    = '0';
+            $current_planet['planet_b_building_id'] = '0';
 
             parent::$db->query(
                 "UPDATE " . PLANETS . " SET
@@ -363,6 +354,7 @@ class UpdateLib extends XGPCore
             );
 
             $ret_value = false;
+
         }
 
         return $ret_value;

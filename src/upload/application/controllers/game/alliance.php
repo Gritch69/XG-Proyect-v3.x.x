@@ -786,7 +786,7 @@ class Alliance extends XGPCore
                         $_POST['owner_range'] = isset($_POST['owner_range']) ? stripslashes($_POST['owner_range']) : '';
                         $_POST['web'] = isset($_POST['web']) ? stripslashes($_POST['web']) : '';
                         $_POST['image'] = isset($_POST['image']) ? stripslashes($_POST['image']) : '';
-                        $_POST['text'] = isset($_POST['text']) ? FunctionsLib::formatText($_POST['text']) : '';
+                        $_POST['text'] = isset($_POST['text']) ? FormatLib::formatText($_POST['text']) : '';
                     }
 
                     if (isset($_POST['options'])) {

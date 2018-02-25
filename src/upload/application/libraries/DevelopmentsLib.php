@@ -364,7 +364,7 @@ class DevelopmentsLib extends XGPCore
                     return false;
                 }
             }
-            
+
             return $enabled;
         } else {
 
@@ -402,135 +402,148 @@ class DevelopmentsLib extends XGPCore
     {
         $lang       = parent::$lang;
         $resource   = parent::$objects->getObjects();
+        $build_end_time = '0';
+        $new_queue = '0';
 
-        if ($current_planet['planet_b_building'] == 0) {
+        if ($current_planet['planet_b_building'] == '0') {
 
             $current_queue = $current_planet['planet_b_building_id'];
 
-            if ($current_queue != 0) {
+            if ($current_queue != '0') {
 
                 $queue_array    = explode(";", $current_queue);
                 $loop           = true;
 
-                while ($loop == true) {
+                while ( $loop == true ) {
 
-                    $list_id_array  = explode(",", $queue_array[0]);
-                    $element        = $list_id_array[0];
-                    $level          = $list_id_array[1];
-                    $build_time     = $list_id_array[2];
-                    $build_end_time = $list_id_array[3];
-                    $build_mode     = $list_id_array[4];
-                    $no_more_level  = false;
+                    if( count($queue_array) == 0 ) {
 
-                    if ($build_mode == 'destroy') {
+                        $build_end_time = '0';
+                        $new_queue      = '0';
+                        $loop           = false;
 
-                        $for_destroy    = true;
                     } else {
 
-                        $for_destroy    = false;
-                    }
+                        $list_id_array  = explode(",", $queue_array[0]);
+                        $element        = $list_id_array[0];
+                        $level          = $list_id_array[1];
+                        $build_time     = $list_id_array[2];
+                        $build_end_time = $list_id_array[3];
+                        $build_mode     = $list_id_array[4];
+                        $no_more_level  = false;
 
-                    $is_payable = self::isDevelopmentPayable(
-                        $current_user,
-                        $current_planet,
-                        $element,
-                        true,
-                        $for_destroy
-                    );
+                        if ($build_mode == 'destroy') {
 
-                    if ($for_destroy) {
+                            $for_destroy    = true;
 
-                        if ($current_planet[$resource[$element]] == 0) {
-
-                            $is_payable     = false;
-                            $no_more_level  = true;
-                        }
-                    }
-
-                    if ($is_payable == true) {
-
-                        $price  = self::developmentPrice($current_user, $current_planet, $element, true, $for_destroy);
-                        
-                        $current_planet['planet_metal']     -= $price['metal'];
-                        $current_planet['planet_crystal']   -= $price['crystal'];
-                        $current_planet['planet_deuterium'] -= $price['deuterium'];
-                        
-                        $current_time   = time();
-                        $build_end_time = $build_end_time;
-                        $new_queue      = implode(";", $queue_array);
-
-                        if ($new_queue == '') {
-
-                            $new_queue  = '0';
-                        }
-
-                        $loop   = false;
-                    } else {
-
-                        $element_name   = $lang['tech'][$element];
-
-                        if ($no_more_level == true) {
-
-                            $message    = sprintf($lang['sys_nomore_level'], $element_name);
                         } else {
 
-                            $price      = self::developmentPrice(
-                                $current_user,
-                                $current_planet,
-                                $element,
-                                true,
-                                $for_destroy
-                            );
+                            $for_destroy    = false;
 
-                            $message    = sprintf(
-                                $lang['sys_notenough_money'],
-                                $element_name,
-                                FormatLib::prettyNumber($current_planet['planet_metal']),
-                                $lang['Metal'],
-                                FormatLib::prettyNumber($current_planet['planet_crystal']),
-                                $lang['Crystal'],
-                                FormatLib::prettyNumber($current_planet['planet_deuterium']),
-                                $lang['Deuterium'],
-                                FormatLib::prettyNumber($price['metal']),
-                                $lang['Metal'],
-                                FormatLib::prettyNumber($price['crystal']),
-                                $lang['Crystal'],
-                                FormatLib::prettyNumber($price['deuterium']),
-                                $lang['Deuterium']
-                            );
                         }
 
-                        FunctionsLib::sendMessage(
-                            $current_user['user_id'],
-                            '',
-                            '',
-                            5,
-                            $lang['sys_buildlist'],
-                            $lang['sys_buildlist_fail'],
-                            $message
+                        $is_payable = self::isDevelopmentPayable(
+                            $current_user,
+                            $current_planet,
+                            $element,
+                            true,
+                            $for_destroy
                         );
 
-                        array_shift($queue_array);
+                        if ($for_destroy) {
 
-                        foreach ($queue_array as $num => $info) {
+                            if ($current_planet[$resource[$element]] == 0) {
 
-                            $fix_ele            = explode(",", $info);
-                            $fix_ele[3]         = $fix_ele[3] - $build_time;
-                            $queue_array[$num]  = implode(",", $fix_ele);
+                                $is_payable     = false;
+                                $no_more_level  = true;
+                            }
                         }
 
-                        $actual_count   = count($queue_array);
+                        if ($is_payable == true) {
 
-                        if ($actual_count == 0) {
+                            $price  = self::developmentPrice($current_user, $current_planet, $element, true, $for_destroy);
 
-                            $build_end_time = '0';
-                            $new_queue      = '0';
-                            $loop           = false;
+                            $current_planet['planet_metal']     -= $price['metal'];
+                            $current_planet['planet_crystal']   -= $price['crystal'];
+                            $current_planet['planet_deuterium'] -= $price['deuterium'];
+
+                            $current_time   = time();
+                            $build_end_time = $build_end_time;
+                            $new_queue      = implode(";", $queue_array);
+
+                            if ($new_queue == '') {
+                                $new_queue  = '0';
+                            }
+
+                            $loop   = false;
+                        } else {
+
+                            $element_name   = $lang['tech'][$element];
+                            if ($no_more_level == true) {
+
+                                $message    = sprintf($lang['sys_nomore_level'], $element_name);
+                            } else {
+                                $price      = self::developmentPrice(
+                                    $current_user,
+                                    $current_planet,
+                                    $element,
+                                    true,
+                                    $for_destroy
+                                );
+
+                                $message    = sprintf(
+                                    $lang['sys_notenough_money'],
+                                    $element_name,
+                                    FormatLib::prettyNumber($current_planet['planet_metal']),
+                                    $lang['Metal'],
+                                    FormatLib::prettyNumber($current_planet['planet_crystal']),
+                                    $lang['Crystal'],
+                                    FormatLib::prettyNumber($current_planet['planet_deuterium']),
+                                    $lang['Deuterium'],
+                                    FormatLib::prettyNumber($price['metal']),
+                                    $lang['Metal'],
+                                    FormatLib::prettyNumber($price['crystal']),
+                                    $lang['Crystal'],
+                                    FormatLib::prettyNumber($price['deuterium']),
+                                    $lang['Deuterium']
+                                );
+                            }
+
+                            FunctionsLib::sendMessage(
+                                $current_user['user_id'],
+                                '',
+                                '',
+                                5,
+                                $lang['sys_buildlist'],
+                                $lang['sys_buildlist_fail'],
+                                $message
+                            );
+
+                            array_shift($queue_array);
+
+                            if( count( $queue_array ) > 0 ) {
+
+                                foreach ($queue_array as $num => $info) {
+
+                                    $fix_ele            = explode(",", $info);
+                                    $fix_ele[3]         = $fix_ele[3] - $build_time;
+                                    $queue_array[$num]  = implode(",", $fix_ele);
+
+                                }
+
+                                $loop = true;
+
+                            } else {
+
+                                $build_end_time = '0';
+                                $new_queue      = '0';
+                                $loop           = false;
+
+                            }
                         }
                     }
                 }
             } else {
-
                 $build_end_time = '0';
                 $new_queue      = '0';
             }

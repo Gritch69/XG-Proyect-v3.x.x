@@ -16,6 +16,7 @@ namespace application\controllers\game;
 
 use application\core\XGPCore;
 use application\libraries\FunctionsLib;
+use application\libraries\FormatLib;
 
 /**
  * Notes Class
@@ -81,7 +82,7 @@ class Notes extends XGPCore
             $time = time();
             $priority = intval($_POST['u']);
             $title = ( $_POST['title'] ) ? parent::$db->escapeValue(strip_tags($_POST['title'])) : "Sin t&iacute;tulo";
-            $text = $_POST['text'] ? FunctionsLib::formatText($_POST['text']) : $this->_lang['nt_no_text'];
+            $text = $_POST['text'] ? FormatLib::formatText($_POST['text']) : $this->_lang['nt_no_text'];
 
             if ($s == 1) {
                 parent::$db->query("INSERT INTO " . NOTES . " SET

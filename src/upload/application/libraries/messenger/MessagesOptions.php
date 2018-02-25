@@ -14,6 +14,10 @@
 
 namespace application\libraries\messenger;
 
+use application\libraries\messenger\MessagesTypes;
+use application\libraries\messenger\MessagesFormat;
+use application\libraries\FormatLib;
+
 /**
  * MessagesOptions Class
  *
@@ -119,7 +123,7 @@ final class MessagesOptions
     {
         if ($this->_message_format == '') {
 
-            return MessageFormat::simple;
+            return MessagesFormat::simple;
         }
 
         return $this->_message_format;
@@ -162,7 +166,7 @@ final class MessagesOptions
             $this->_message_text    = stripslashes($message_text);
         } else {
 
-            $this->_message_text    = FunctionsLib::formatText($message_text);
+            $this->_message_text    = FormatLib::formatText($message_text);
         }
     }
 

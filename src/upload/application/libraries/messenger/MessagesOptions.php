@@ -86,6 +86,11 @@ final class MessagesOptions
 
     public function getSender()
     {
+        if ($this->_sender == '') {
+
+            return 0;
+        }
+        
         return $this->_sender;
     }
 

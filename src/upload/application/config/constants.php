@@ -18,13 +18,13 @@
 #
 ###########################################################################
 // GAME FILES VERSION
-define('SYSTEM_VERSION', '3.1.0');
+define('SYSTEM_VERSION', '3.0.5');
 
 // HOOKS
 define('HOOKS_ENABLED', false);
 
 // DEBUG MODE
-define('DEBUG_MODE', false);
+define('DEBUG_MODE', true);
 
 // ERROR LOGS MAIL
 define('ERROR_LOGS_MAIL', '');

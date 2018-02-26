@@ -108,7 +108,8 @@ class Register extends XGPCore
                         'user_agent' => $_SERVER['HTTP_USER_AGENT'],
                         'user_home_planet_id' => 0,
                         'user_register_time' => time(),
-                        'user_password' => $hashed_password
+                        'user_password' => $hashed_password,
+                        'user_current_page' => parent::$db->escapeValue($_SERVER['REQUEST_URI'])
                     ]
                 );
 

@@ -143,7 +143,7 @@ class PlanetLib extends XGPCore
                     'planet_deuterium' => BUILD_DEUTERIUM,
                     'planet_deuterium_perhour' => FunctionsLib::readConfig('deuterium_basic_income'),
                     'planet_b_building_id' => '0',
-                    'planet_b_hangar_id' => '0'
+                    'planet_b_hangar_id' => ''
                 ]
             );
 
@@ -213,7 +213,7 @@ class PlanetLib extends XGPCore
                     'planet_temp_min' => $min_temp == 0 ? $temp['min'] : $min_temp,
                     'planet_temp_max' => $max_temp == 0 ? $temp['max'] : $max_temp,
                     'planet_b_building_id' => '0',
-                    'planet_b_hangar_id' => '0'
+                    'planet_b_hangar_id' => ''
                 ]
             );
         

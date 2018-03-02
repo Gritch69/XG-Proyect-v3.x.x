@@ -136,7 +136,7 @@ $lang['ov_fields']							= 'Fields';
 
 //----------------------------------------------------------------------------//
 //GALAXY
-$lang['gl_no_access_vm_on']                     = 'You cannot use the galaxy view whilst in vacation mode or when your account has not been validated!';
+$lang['gl_no_access_vm_on']                 = 'You cannot use the galaxy view whilst in vacation mode or when your account has not been validated!';
 $lang['gl_no_deuterium_to_view_galaxy']		= 'You don\'t have enough deuterium!';
 $lang['gl_legend']							= 'Legend';
 $lang['gl_strong_player']					= 'stronger player';
@@ -193,14 +193,14 @@ $lang['gl_player']							= '';
 $lang['gl_in_the_rank']						= ' ranked ';
 $lang['gl_stat']							= 'Statistics';
 $lang['gl_success']							= 'ok';
-$lang['gl_error']							= 'Error, an error ocurred';
+$lang['gl_error']							= 'Error, an error occurred';
 $lang['gl_no_moon']							= 'Error, no moon';
 $lang['gl_noob_protection']					= 'Error, the player is protected';
 $lang['gl_too_strong']						= 'Error, the player is too strong';
 $lang['gl_vacation_mode']					= 'Error, the player is on vacations';
 $lang['gl_only_amount_ships']				= 'Error, only %s were sent';
 $lang['gl_no_ships']						= 'Error, no available ships';
-$lang['gl_no_slots']						= 'Error, no fleet slots avilable';
+$lang['gl_no_slots']						= 'Error, no fleet slots available';
 $lang['gl_no_deuterium']					= 'Error, no enough deuterium';
 $lang['gl_no_planet']						= 'Error, planet doesn\'t exist';
 $lang['gl_not_enough_storage']				= 'Error, not enough storage';

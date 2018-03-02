@@ -1,3 +1,5 @@
 src/upload/application/config/config.php
 src/upload/data/logs/ErrorLog.php
-/src/tests/build/
+src/tests/build/
+XG-Proyect-v3.x.x.iml
+.idea/

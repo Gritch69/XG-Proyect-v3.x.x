@@ -52,6 +52,9 @@ class Spy extends Missions
     public function spyMission($fleet_row)
     {
         if ($fleet_row['fleet_mess'] == 0 && $fleet_row['fleet_start_time'] <= time()) {
+
+            parent::makeUpdate($fleet_row, $fleet_row['fleet_end_galaxy'], $fleet_row['fleet_end_system'], $fleet_row['fleet_end_planet'], $fleet_row['fleet_end_type']);
+
             $current_data = parent::$db->queryFetch("SELECT p.planet_name, p.planet_galaxy, p.planet_system, p.planet_planet, u.user_name, r.research_espionage_technology, pr.premium_officier_technocrat
 															FROM " . PLANETS . " AS p
 															INNER JOIN " . USERS . " AS u ON u.user_id = p.planet_user_id
@@ -78,9 +81,6 @@ class Spy extends Missions
             $CurrentSpyLvl = OfficiersLib::getMaxEspionage($current_data['research_espionage_technology'], $current_data['premium_officier_technocrat']);
             $TargetSpyLvl = OfficiersLib::getMaxEspionage($target_data['research_espionage_technology'], $target_data['premium_officier_technocrat']);
             $fleet = explode(';', $fleet_row['fleet_array']);
-            $fquery = '';
-
-            parent::makeUpdate($fleet_row, $fleet_row['fleet_end_galaxy'], $fleet_row['fleet_end_system'], $fleet_row['fleet_end_planet'], $fleet_row['fleet_end_type']);
 
             foreach ($fleet as $a => $b) {
                 if ($b != '') {
